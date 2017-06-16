@@ -9,12 +9,8 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * Created by natalyablanco on 16.06.17.
- */
-
 public class ApiDealPort {
-    private static final String BASE_URL = "https://register.atudo.com/api/v2/";
+    private static final String BASE_URL = "";
 
     static ApiInterface buildApi(Context context,
             String baseUrl,
