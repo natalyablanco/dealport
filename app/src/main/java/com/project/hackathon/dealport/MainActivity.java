@@ -44,7 +44,7 @@ public class MainActivity extends Activity {
             }
         });
 
-        service = DealPortService.createService();
+        service = DealPortService.createLocusService();
 
         Call<Object> callIdList = service.getAllIds(KEY);
         callIdList.enqueue(new Callback<Object>() {
