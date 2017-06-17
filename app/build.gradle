@@ -28,11 +28,12 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
+    compile('com.locuslabs:sdk:1.2.32:release@aar') {
+        transitive=true
+    }
+
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
-    compile 'io.reactivex.rxjava2:rxjava:2.0.6'
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    compile 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
 
     compile 'com.jakewharton:butterknife:8.6.0'
@@ -43,4 +44,17 @@ dependencies {
     annotationProcessor 'com.ryanharter.auto.value:auto-value-gson:0.4.5'
     provided 'com.ryanharter.auto.value:auto-value-gson:0.4.5'
 
+    compile 'com.facebook.android:facebook-android-sdk:4.0.0'
+
+}
+
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if (requested.group == 'com.android.support') {
+            if (!requested.name.startsWith("multidex")) {
+                details.useVersion '25.3.0'
+            }
+        }
+    }
 }

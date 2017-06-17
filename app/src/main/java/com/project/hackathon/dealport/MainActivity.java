@@ -1,50 +1,142 @@
 package com.project.hackathon.dealport;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.widget.GridView;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
-import java.net.URL;
-import java.util.ArrayList;
+import com.locuslabs.sdk.configuration.LocusLabs;
+import com.locuslabs.sdk.maps.model.Airport;
+import com.locuslabs.sdk.maps.model.AirportDatabase;
+import com.locuslabs.sdk.maps.model.Floor;
+import com.locuslabs.sdk.maps.model.Map;
+import com.locuslabs.sdk.maps.model.Marker;
+import com.locuslabs.sdk.maps.view.MapView;
+import com.project.hackathon.dealport.api.DealPortApi;
+import com.project.hackathon.dealport.api.DealPortService;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
-    private ArrayList<Bitmap> bitmapList;
-    @BindView(R.id.gridview)
-    GridView imageGrid;
+public class MainActivity extends Activity {
+    private AirportDatabase airportDatabase;
+    private MapView mapView;
+    private Context context;
+    private Airport airport;
+    private Map map;
+    private DealPortApi service;
+    private String KEY = "NAnEjbdUmp2pl8RCUskoe9FPP1NAxjhq7DBUIlID";
+
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        context = this;
+
+        LocusLabs.registerOnReadyListener(new LocusLabs.OnReadyListener() {
+            @Override
+            public void onReady() {
+                airportDatabase = new AirportDatabase();
+                loadAirportAndMap("lax");
+            }
+        });
+
+        service = DealPortService.createService();
+
+        Call<Object> callIdList = service.getAllIds(KEY);
+        callIdList.enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                Log.d("TEST", response.body().toString());
+            }
+
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+                Log.e("TEST", t.getMessage());
+
+            }
+        });
+
+        Call<Object> callGetCategories = service.getAllCategories(KEY);
+        callGetCategories.enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, Response<Object> response) {
+                Log.d("TEST", response.body().toString());
+
+            }
+
+            @Override
+            public void onFailure(Call<Object> call, Throwable t) {
+                Log.e("TEST", t.getMessage());
+            }
+        });
+
+    }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+    protected void onDestroy() {
+        super.onDestroy();
+        if (airportDatabase != null) {
+            airportDatabase.close();
+            airportDatabase = null;
+        }
 
-        this.bitmapList = new ArrayList<Bitmap>();
+        if (mapView != null) {
+            mapView.close();
+            mapView = null;
+        }
 
-        try {
-            for (int i = 0; i < 10; i++) {
-                this.bitmapList.add(urlImageToBitmap("http://placehold.it/150x150"));
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mapView == null || !mapView.onBackPressed()) {
+            super.onBackPressed();
+        }
+    }
+
+    private void loadAirportAndMap(String venueId) {
+        final RelativeLayout rl = new RelativeLayout(context);
+
+        AirportDatabase.OnLoadAirportAndMapListeners listeners =
+                new AirportDatabase.OnLoadAirportAndMapListeners();
+        listeners.loadedInitialViewListener = new AirportDatabase.OnLoadedInitialViewListener() {
+            @Override
+            public void onLoadedInitialView(View view) {
+                ViewGroup parent = (ViewGroup) view.getParent();
+                if (parent != null) parent.removeView(view);
+
+                view.setLayoutParams(
+                        new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.MATCH_PARENT));
+                rl.addView(view);
+                setContentView(rl);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        };
+        listeners.loadCompletedListener = new AirportDatabase.OnLoadCompletedListener() {
 
+            @Override
+            public void onLoadCompleted(Airport _airport, Map _map, final MapView _mapView,
+                    Floor floor, Marker marker) {
+                mapView = _mapView;
+                map = _map;
+                //      addTwoFlightStatusMarkers();
+            }
+        };
+        listeners.loadFailedListener = new AirportDatabase.OnLoadFailedListener() {
+            @Override
+            public void onLoadFailed(String exceptionMessage) {
+            }
+        };
 
-        this.imageGrid.setAdapter(new ImageAdapter(this, this.bitmapList));
-
+        listeners.loadProgressListener = new AirportDatabase.OnLoadProgressListener() {
+            @Override
+            public void onLoadProgress(Integer percentComplete) {
+            }
+        };
+        airportDatabase.loadAirportAndMap(venueId, null, listeners);
     }
-
-    private Bitmap urlImageToBitmap(String imageUrl) throws Exception {
-        Bitmap result = null;
-        URL url = new URL(imageUrl);
-        if (url != null) {
-            result = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-        }
-        return result;
-    }
-
 }
