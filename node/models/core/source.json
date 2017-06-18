@@ -1,0 +1,42 @@
+{
+  "name": "source",
+  "plural": "sources",
+  "base": "PersistedModel",
+  "strict": true,
+  "options": {
+    "idInjection": false,
+    "validateUpsert": true,
+    "allowExtendedOperators": true
+  },
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "max": 50
+    },
+    "type": {
+      "type": "string",
+      "required": true
+    },
+    "connector": {
+      "type": "string",
+      "required": true
+    },
+    "currency": {
+      "type": "string",
+      "max": 5
+    },
+    "attrs": {
+      "type": "any",
+      "required": true
+    }
+
+  },
+  "validations": [],
+  "relations": {
+  },
+  "acls": [],
+  "methods": {},
+  "scope": {
+  }
+}

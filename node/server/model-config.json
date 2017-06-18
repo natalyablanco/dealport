@@ -1,0 +1,62 @@
+{
+  "_meta": {
+    "sources": [
+      "../models",
+      "../models/auth",
+      "../models/core",
+      "./node_modules/loopback-component-passport/lib/models"
+    ]
+  },
+  "app": {
+    "dataSource": "db",
+    "public": true
+  },
+  "user": {
+    "dataSource": "db",
+    "public": true
+  },
+  "accessToken": {
+    "dataSource": "db",
+    "public": false
+  },
+  "userCredential": {
+    "dataSource": "db",
+    "public": false
+  },
+  "userIdentity": {
+    "dataSource": "db",
+    "public": false
+  },
+  "ACL": {
+    "dataSource": "db",
+    "public": false
+  },
+  "RoleMapping": {
+    "dataSource": "db",
+    "public": false
+  },
+  "Role": {
+    "dataSource": "db",
+    "public": false
+  },
+  "Email": {
+    "dataSource": "email",
+    "public": false
+  },
+  "source": {
+    "dataSource": "db",
+    "public": true
+  },
+  "product": {
+    "dataSource": "db",
+    "public": true
+  },
+  "scan": {
+      "dataSource": "db",
+      "public": true
+  },
+  "diff": {
+      "dataSource": "db",
+      "public": true
+  }
+}

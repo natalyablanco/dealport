@@ -1,0 +1,51 @@
+{
+  "name": "diff",
+  "plural": "diffs",
+  "base": "PersistedModel",
+  "strict": true,
+  "options": {
+    "idInjection": false,
+    "validateUpsert": true,
+    "allowExtendedOperators": true
+  },
+  "properties": {
+    "name": {
+        "id": 3,
+      "type": "string",
+      "required": true
+    },
+    "source": {
+        "id": 1,
+      "type": "any",
+      "required": true
+    },
+    "external": {
+      "type": "any",
+      "required": true
+    },
+    "date": {
+        "id": 2,
+        "type": "string",
+        "required": true
+    },
+    "desc": {
+        "type": "string"
+    },
+    "img": {
+        "type": "string"
+    },
+    "url": {
+        "type": "string"
+    },
+    "type": {
+        "type": "string"
+    }
+  },
+  "validations": [],
+  "relations": {
+  },
+  "acls": [],
+  "methods": {},
+  "scope": {
+  }
+}

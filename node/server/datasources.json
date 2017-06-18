@@ -1,0 +1,24 @@
+{
+  "db": {
+    
+    "host": "localhost",
+        "port": 27017,
+        "database": "dealport",
+        "connector": "mongodb"  
+  },
+
+  "email": {
+    "connector": "mail",
+    "transports": [{
+        "type": "smtp",
+        "host": "smtp.gmail.com",
+        "secureConnection": true,
+        "port": 465,
+        "alias": "gmail",
+        "auth": {
+          "user": "ssss",
+          "pass": "ssss"
+        }
+    }]
+  }
+}
