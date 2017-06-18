@@ -31,6 +31,12 @@
     "desc": {
         "type": "string"
     },
+    "price": {
+        "type": "number"
+    },
+    "delta": {
+        "type": "number"
+    },
     "img": {
         "type": "string"
     },

@@ -62,8 +62,8 @@ const PARSER = {
 
         return { items: fielder(val, pattern.items), next: nxt };
     },
-    HTML: function(data, pattern, next) {
-
+    HTML: function(data, pattern) {
+        console.log(data, pattern);
     }
 }
 
@@ -85,14 +85,17 @@ const CLIENTS = {
                 region: attrs.country
             });
         }).catch(function(err){
-            // console.log(err);
+            console.log(err);
             // if (ind >= parsedData.collection.items.length) {
             //     ress.json(result);
             // }
         });
     },
-    HTTP: function httpClient(opt, parser, cb) {
-        http.request(opt, (res) => {
+    HTTPS: function(opt, parser, cb) {
+        CLIENTS.HTTP(opt, parser, cb, require('https'))
+    },
+    HTTP: function httpClient(opt, parser, cb, https) {
+        (https || http).request(opt, (res) => {
             const { statusCode } = res;
             const contentType = res.headers['content-type'];
             let error;
@@ -136,6 +139,8 @@ module.exports = function (app) {
                 img: item.img,
                 desc: item.desc,
                 external: ext.region,
+                price: item.price,
+                delta: diff,
                 date: today,
                 type: 'PRODUCT'
             }, (err, obj) => {});
